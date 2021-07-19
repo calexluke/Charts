@@ -19,6 +19,9 @@ class LineChart2ViewController: DemoBaseViewController {
     @IBOutlet var sliderTextX: UITextField!
     @IBOutlet var sliderTextY: UITextField!
     
+    var timer: Timer?
+    var counter = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,7 +40,8 @@ class LineChart2ViewController: DemoBaseViewController {
                         .saveToGallery,
                         .togglePinchZoom,
                         .toggleAutoScaleMinMax,
-                        .toggleData]
+                        .toggleData,
+                        .startRealTimeDemo]
         
         chartView.delegate = self
         
@@ -177,6 +181,14 @@ class LineChart2ViewController: DemoBaseViewController {
                 set.mode = (set.mode == .cubicBezier) ? .horizontalBezier : .cubicBezier
             }
             chartView.setNeedsDisplay()
+        case .startRealTimeDemo:
+            // Animate filling 500 data points over 50 seconds (100ms per data point)
+            sliderX.value = 500
+            slidersValueChanged(nil)
+            chartView.animate(xAxisDuration: 50)
+            // Instead, can use the below to update the graph, add data point every 100ms without animations. 
+            //counter = 0
+            //timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
             
         default:
             super.handleOption(option, forChartView: chartView)
@@ -200,5 +212,14 @@ class LineChart2ViewController: DemoBaseViewController {
                                             duration: 1)
         //[_chartView moveViewToAnimatedWithXValue:entry.x yValue:entry.y axis:[_chartView.data getDataSetByIndex:dataSetIndex].axisDependency duration:1.0];
         //[_chartView zoomAndCenterViewAnimatedWithScaleX:1.8 scaleY:1.8 xValue:entry.x yValue:entry.y axis:[_chartView.data getDataSetByIndex:dataSetIndex].axisDependency duration:1.0];
+    }
+    
+    @objc func timerFired() {
+        sliderX.value += 1
+        slidersValueChanged(nil)
+        counter += 1
+        if counter == 500 {
+            timer?.invalidate()
+        }
     }
 }
