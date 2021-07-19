@@ -50,6 +50,7 @@ enum Option {
     case toggleYLabels
     case toggleRotate
     case toggleHighlightCircle
+    case startRealTimeDemo
     
     var label: String {
         switch self {
@@ -91,6 +92,7 @@ enum Option {
         case .toggleYLabels: return "Toggle Y-Labels"
         case .toggleRotate: return "Toggle Rotate"
         case .toggleHighlightCircle: return "Toggle highlight circle"
+        case .startRealTimeDemo: return "Start Real Time Demo"
         }
     }
 }
